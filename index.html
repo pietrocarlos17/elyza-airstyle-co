@@ -2459,10 +2459,6 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
     const orderId=generateOrderId();
     payload.order_id=orderId;
 
-    // Pixel events
-    if(window.fbq)fbq('track','Purchase',{value:payload.total,currency:'COP',content_ids:['elyza-airstyle-co'],content_type:'product',num_items:qty});
-    if(window.ttq&&window.ttq.track)window.ttq.track('CompletePayment',{value:payload.total,currency:'COP',contents:[{content_id:'elyza-airstyle-co',quantity:qty,price:unitPrice}]});
-
     // Local backup — always saved, survives any network failure
     try{
       const KEY='elyza_cod_orders';
@@ -2470,6 +2466,15 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
       prev.push(payload);
       localStorage.setItem(KEY,JSON.stringify(prev));
     }catch(e){console.warn('[ELYZA COD] localStorage backup failed',e)}
+
+    // Fire Purchase event in Meta + TikTok pixels — only after backend confirms the order
+    let purchaseFired=false;
+    const firePurchasePixels=()=>{
+      if(purchaseFired)return;
+      purchaseFired=true;
+      if(window.fbq)fbq('track','Purchase',{value:payload.total,currency:'COP',content_ids:['elyza-airstyle-co'],content_type:'product',num_items:qty});
+      if(window.ttq&&window.ttq.track)window.ttq.track('CompletePayment',{value:payload.total,currency:'COP',contents:[{content_id:'elyza-airstyle-co',quantity:qty,price:unitPrice}]});
+    };
 
     const endpoint=window.ELYZA_COD_ENDPOINT||'';
     const finalize=()=>{
@@ -2490,10 +2495,11 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
         body,
         redirect:'follow',
       })
-        .then(()=>finalize())
-        .catch(()=>finalize()); // still confirm — local backup already saved
+        .then(res=>{if(res&&res.ok)firePurchasePixels();finalize();})
+        .catch(()=>finalize()); // still confirm — local backup already saved; pixel NOT fired on network failure
     }else{
       console.log('[ELYZA COD] No endpoint configured. Order saved in localStorage. Payload:',payload);
+      firePurchasePixels();
       setTimeout(finalize,700);
     }
   });
