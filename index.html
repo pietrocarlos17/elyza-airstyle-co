@@ -2098,15 +2098,6 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
     </div>
   </div>
 
-  <div class="cod-quantity">
-    <span class="lbl">Cantidad</span>
-    <div class="qty">
-      <button id="qtyMinus" aria-label="Reducir cantidad">−</button>
-      <span class="n" id="qtyVal">1</span>
-      <button id="qtyPlus" aria-label="Aumentar cantidad">+</button>
-    </div>
-  </div>
-
   <div class="cod-trust-row">
     <div class="trust-badge">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l9 4v6c0 5-3.5 9.5-9 10-5.5-.5-9-5-9-10V6l9-4z"/><path d="M9 12l2 2 4-4"/></svg>
@@ -2123,11 +2114,6 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
       <span class="t">Envío 2-5 días</span>
       <span class="s">En toda Colombia</span>
     </div>
-  </div>
-
-  <div class="cod-trust">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l9 4v6c0 5-3.5 9.5-9 10-5.5-.5-9-5-9-10V6l9-4z"/><path d="M9 12l2 2 4-4"/></svg>
-    <span><strong>Pago contra entrega.</strong> Pagas $<span id="codTotalInline">289.000</span> al mensajero cuando recibas tu pedido. Sin tarjeta.</span>
   </div>
 
   <div class="cod-urgency-soft">
@@ -2301,25 +2287,15 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
   document.getElementById('cartClose').addEventListener('click',closeCart);
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCart()});
 
-  // Quantity logic
+  // Quantity is fixed at 1 (selector removed). qty kept as a const so pixel events keep working.
   const unitPrice=289000,unitRetail=990000;
+  const qty=1;
   // Colombia: format as 289.000 with dot as thousand separator
   const fmt=n=>n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.');
-  let qty=1;
-  const qtyVal=document.getElementById('qtyVal');
-  const updateQty=()=>{
-    qtyVal.textContent=qty;
-    const now=unitPrice*qty;
-    const was=unitRetail*qty;
-    setText('itemPrice',fmt(now));
-    setText('itemWas',fmt(was));
-    setText('sumSub',fmt(now));
-    setText('sumTotal',fmt(now));
-    setText('codTotalInline',fmt(now));
-  };
-  updateQty();
-  document.getElementById('qtyMinus').addEventListener('click',()=>{if(qty>1){qty--;updateQty()}});
-  document.getElementById('qtyPlus').addEventListener('click',()=>{if(qty<5){qty++;updateQty()}});
+  setText('itemPrice',fmt(unitPrice));
+  setText('itemWas',fmt(unitRetail));
+  setText('sumSub',fmt(unitPrice));
+  setText('sumTotal',fmt(unitPrice));
 
   // ---------- COD form submission ----------
   const codForm=document.getElementById('codForm');
