@@ -1396,7 +1396,7 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
 
 <div class="promo-bar">
   <span class="dot"></span>
-  <strong>Oferta Flash · 71% DTO</strong>
+  <strong>Oferta Flash · Solo hoy</strong>
   <span>— Multiestilizador Dyson Airwrap Complete Long por solo $289.000. Pago contra entrega · Envío gratis 2-5 días en toda Colombia.</span>
 </div>
 
@@ -1667,11 +1667,8 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
 
         <div class="offer-hero-price">
           <div class="row">
-            <span class="was">$990.000</span>
             <span class="now"><sup>$</sup>289.000</span>
-            <span class="badge">−71%</span>
           </div>
-          <div class="save">Ahorras $701.000 hoy</div>
         </div>
 
         <div class="offer-urgency-strip">
@@ -1942,7 +1939,7 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
       </details>
       <details class="q">
         <summary>¿Es realmente una oferta limitada? <span class="plus"></span></summary>
-        <div class="ans">Sí. El lanzamiento de la edición a $289.000 (precio original $990.000) está disponible solo mientras dure el stock — habitualmente cuestión de horas. Una vez agotada esta partida, no podemos garantizar el próximo descuento.</div>
+        <div class="ans">Sí. El lanzamiento de la edición a $289.000 está disponible solo mientras dure el stock — habitualmente cuestión de horas. Una vez agotada esta partida, no podemos garantizar mantener este precio.</div>
       </details>
       <details class="q">
         <summary>¿Es adecuado para mi tipo de cabello? <span class="plus"></span></summary>
@@ -2093,8 +2090,6 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
     </div>
     <div class="price">
       <div class="now">$<span id="itemPrice">289.000</span></div>
-      <div class="was">$<span id="itemWas">990.000</span></div>
-      <div class="badge">−71%</div>
     </div>
   </div>
 
@@ -2226,9 +2221,7 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
     <div class="sb-left">
       <div class="sb-tag"><span class="dot"></span>Oferta Flash · Solo hoy</div>
       <div class="sb-price">
-        <span class="was">$990.000</span>
         <span class="now"><sup>$</sup>289.000</span>
-        <span class="badge">−71%</span>
       </div>
     </div>
     <a href="#shop" class="sb-cta">
@@ -2288,12 +2281,11 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCart()});
 
   // Quantity is fixed at 1 (selector removed). qty kept as a const so pixel events keep working.
-  const unitPrice=289000,unitRetail=990000;
+  const unitPrice=289000;
   const qty=1;
   // Colombia: format as 289.000 with dot as thousand separator
   const fmt=n=>n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.');
   setText('itemPrice',fmt(unitPrice));
-  setText('itemWas',fmt(unitRetail));
   setText('sumSub',fmt(unitPrice));
   setText('sumTotal',fmt(unitPrice));
 
