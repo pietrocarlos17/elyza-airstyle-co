@@ -2453,6 +2453,15 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
     // Map Bogotá D.C. → Cundinamarca para el sistema de importación
     const rawDept=document.getElementById('codProvince').value;
     const dept=rawDept==='Bogotá D.C.'?'Cundinamarca':rawDept;
+    // Normaliza variantes de "Bogotá" (bogota, BOGOTA, Bogotá D.C., d.c., etc.) → "Bogotá"
+    // así el sistema acepta la importación sin error de validación.
+    const rawCity=document.getElementById('codCity').value.trim();
+    const isBogotaVariant=(c=>{
+      if(!c)return false;
+      const n=c.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z]/g,'');
+      return n==='bogota'||n==='bogotadc'||n==='distritocapital'||n==='dc';
+    })(rawCity);
+    const city=isBogotaVariant?'Bogotá':rawCity;
 
     const payload={
       // Columnas EXACTAS de la plantilla de importación de pedidos:
@@ -2463,7 +2472,7 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
       'TELÉFONO':document.getElementById('codPhone').value.trim(),
       'DIRECCIÓN Y BARRIO':document.getElementById('codAddress').value.trim(),
       'DEPARTAMENTO':dept,
-      'CIUDAD':document.getElementById('codCity').value.trim(),
+      'CIUDAD':city,
       'ID DE PRODUCTO':'227610',
       'ID DE VARIACION':'',
       'CANTIDAD':'1',
