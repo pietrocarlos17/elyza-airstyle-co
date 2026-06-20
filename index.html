@@ -27,7 +27,7 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
   ============================================================
 -->
 <script>
-  window.ELYZA_COD_ENDPOINT = "";
+  window.ELYZA_COD_ENDPOINT = "https://sheetdb.io/api/v1/hy0b9s6te0w6l";
   window.ELYZA_COD_PROVIDER = "sheetdb";
 </script>
 
@@ -2464,22 +2464,22 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
     const city=isBogotaVariant?'Bogotá':rawCity;
 
     const payload={
-      // Columnas EXACTAS de la plantilla de importación de pedidos:
+      // Columnas EXACTAS de la plantilla (con asteriscos en obligatorios):
       'IDENTIFICADOR':'',
-      'NOMBRES':document.getElementById('codFirstName').value.trim(),
+      'NOMBRES*':document.getElementById('codFirstName').value.trim(),
       'APELLIDOS':document.getElementById('codLastName').value.trim(),
       'CEDULA (OPCIONAL)':'',
       'TELÉFONO':document.getElementById('codPhone').value.trim(),
-      'DIRECCIÓN Y BARRIO':document.getElementById('codAddress').value.trim(),
-      'DEPARTAMENTO':dept,
-      'CIUDAD':city,
-      'ID DE PRODUCTO':'227610',
-      'ID DE VARIACION':'',
-      'CANTIDAD':'1',
-      'PRECIO UNITARIO':String(unitPrice),
+      'DIRECCIÓN Y BARRIO*':document.getElementById('codAddress').value.trim(),
+      'DEPARTAMENTO*':dept,
+      'CIUDAD*':city,
+      'ID DE PRODUCTO*':'227610',
+      'ID DE VARIACION*':'',
+      'CANTIDAD*':'1',
+      'PRECIO UNITARIO (SIN PUNTOS NI COMAS)*':String(unitPrice),
       'OTROS CARGOS':'',
       'VALOR OTROS CARGOS':'',
-      'CON RECAUDO (SI/NO)':'SI',
+      'CON RECAUDO (SI/NO)*':'SI',
       'NOTA':'',
       'EMAIL (OPCIONAL)':'',
       // Metadata interna (no va al sistema de importación pero ayuda en debug/localStorage)
