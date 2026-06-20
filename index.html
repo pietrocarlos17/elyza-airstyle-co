@@ -2176,28 +2176,29 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
   </div>
 
   <form class="cod-form" id="codForm" novalidate>
-    <div class="cod-field">
-      <label for="codName">Nombre y apellidos</label>
-      <input type="text" id="codName" name="name" autocomplete="name" placeholder="Ej. Valentina Restrepo" required>
-      <span class="cod-error">Por favor, introduce tu nombre completo</span>
-    </div>
-
     <div class="row-2">
       <div class="cod-field">
-        <label for="codPhone">Celular <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></label>
-        <input type="tel" id="codPhone" name="phone" autocomplete="tel" placeholder="3XX XXX XXXX" inputmode="tel">
-        <span class="cod-error">Celular no válido (mín. 10 dígitos)</span>
+        <label for="codFirstName">Nombres</label>
+        <input type="text" id="codFirstName" name="first_name" autocomplete="given-name" placeholder="Ej. Valentina" required>
+        <span class="cod-error">Indica tus nombres</span>
       </div>
       <div class="cod-field">
-        <label for="codEmail">Email <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></label>
-        <input type="email" id="codEmail" name="email" autocomplete="email" placeholder="tu@correo.com">
+        <label for="codLastName">Apellidos</label>
+        <input type="text" id="codLastName" name="last_name" autocomplete="family-name" placeholder="Ej. Restrepo Gómez" required>
+        <span class="cod-error">Indica tus apellidos</span>
       </div>
     </div>
 
     <div class="cod-field">
-      <label for="codAddress">Dirección de entrega</label>
-      <input type="text" id="codAddress" name="address" autocomplete="street-address" placeholder="Calle, carrera, número, apto, barrio" required>
-      <span class="cod-error">Indica tu dirección completa con número</span>
+      <label for="codPhone">Celular</label>
+      <input type="tel" id="codPhone" name="phone" autocomplete="tel" placeholder="3XX XXX XXXX" inputmode="tel" required>
+      <span class="cod-error">Celular no válido (mín. 10 dígitos)</span>
+    </div>
+
+    <div class="cod-field">
+      <label for="codAddress">Dirección y barrio</label>
+      <input type="text" id="codAddress" name="address" autocomplete="street-address" placeholder="Ej. Calle 80 #15-23, Barrio Chapinero" required>
+      <span class="cod-error">Indica tu dirección con número y barrio</span>
     </div>
 
     <div class="row-2">
@@ -2217,29 +2218,20 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
       <label for="codProvince">Departamento</label>
       <select id="codProvince" name="province" required>
         <option value="" disabled selected>Selecciona tu departamento</option>
-        <option>Amazonas</option><option>Antioquia</option><option>Arauca</option><option>Atlántico</option>
+        <option>Amazonas</option><option>Antioquia</option><option>Arauca</option>
+        <option>Archipiélago de San Andrés, Providencia y Santa Catalina</option><option>Atlántico</option>
         <option>Bogotá D.C.</option><option>Bolívar</option><option>Boyacá</option><option>Caldas</option>
         <option>Caquetá</option><option>Casanare</option><option>Cauca</option><option>Cesar</option>
         <option>Chocó</option><option>Córdoba</option><option>Cundinamarca</option><option>Guainía</option>
         <option>Guaviare</option><option>Huila</option><option>La Guajira</option><option>Magdalena</option>
         <option>Meta</option><option>Nariño</option><option>Norte de Santander</option><option>Putumayo</option>
-        <option>Quindío</option><option>Risaralda</option><option>San Andrés y Providencia</option><option>Santander</option>
+        <option>Quindío</option><option>Risaralda</option><option>Santander</option>
         <option>Sucre</option><option>Tolima</option><option>Valle del Cauca</option><option>Vaupés</option>
         <option>Vichada</option>
       </select>
       <span class="cod-error">Selecciona tu departamento</span>
     </div>
 
-    <div class="cod-field">
-      <label for="codNotes">Mejor horario para recibir <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></label>
-      <select id="codNotes" name="notes">
-        <option value="" disabled selected>Selecciona un horario</option>
-        <option>Por la mañana</option>
-        <option>Por la tarde</option>
-        <option>Cualquier horario</option>
-      </select>
-      <span style="font-size:11px;color:var(--muted);line-height:1.5;margin-top:2px;display:block">Es solo una sugerencia. No garantiza la hora exacta de la entrega.</span>
-    </div>
   </form>
 
   <div class="cod-summary">
@@ -2366,8 +2358,9 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
   const codSubmit=document.getElementById('codSubmit');
   const codThanks=document.getElementById('codThanks');
   const fields=[
-    {id:'codName',min:3},
-    {id:'codPhone',optional:true,validate:v=>{const d=(v||'').replace(/\D/g,'');return d.length>=10&&d.length<=15}},
+    {id:'codFirstName',min:2},
+    {id:'codLastName',min:2},
+    {id:'codPhone',validate:v=>{const d=(v||'').replace(/\D/g,'');return d.length>=10&&d.length<=15}},
     {id:'codAddress',min:5,validate:v=>/\d/.test(v),blockIfInvalid:true},
     {id:'codCity',min:2},
     {id:'codZip',optional:true,validate:v=>{const d=(v||'').replace(/\D/g,'');return d.length===6}},
@@ -2457,23 +2450,30 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
     codSubmit.innerHTML='<span>Enviando…</span>';
     codSubmit.disabled=true;
 
+    // Map Bogotá D.C. → Cundinamarca para el sistema de importación
+    const rawDept=document.getElementById('codProvince').value;
+    const dept=rawDept==='Bogotá D.C.'?'Cundinamarca':rawDept;
+
     const payload={
-      product:'Elyza AirStyle Pro Complete',
-      sku:'elyza-airstyle-co',
-      quantity:qty,
-      unit_price:unitPrice,
-      total:unitPrice*qty,
-      currency:'COP',
-      payment_method:'COD',
-      country:'CO',
-      name:document.getElementById('codName').value.trim(),
-      phone:document.getElementById('codPhone').value.trim(),
-      email:document.getElementById('codEmail').value.trim(),
-      address:document.getElementById('codAddress').value.trim(),
-      city:document.getElementById('codCity').value.trim(),
-      zip:document.getElementById('codZip').value.trim(),
-      province:document.getElementById('codProvince').value,
-      notes:document.getElementById('codNotes').value.trim(),
+      // Columnas EXACTAS de la plantilla de importación de pedidos:
+      'IDENTIFICADOR':'',
+      'NOMBRES':document.getElementById('codFirstName').value.trim(),
+      'APELLIDOS':document.getElementById('codLastName').value.trim(),
+      'CEDULA (OPCIONAL)':'',
+      'TELÉFONO':document.getElementById('codPhone').value.trim(),
+      'DIRECCIÓN Y BARRIO':document.getElementById('codAddress').value.trim(),
+      'DEPARTAMENTO':dept,
+      'CIUDAD':document.getElementById('codCity').value.trim(),
+      'ID DE PRODUCTO':'227610',
+      'ID DE VARIACION':'',
+      'CANTIDAD':'1',
+      'PRECIO UNITARIO':String(unitPrice),
+      'OTROS CARGOS':'',
+      'VALOR OTROS CARGOS':'',
+      'CON RECAUDO (SI/NO)':'SI',
+      'NOTA':'',
+      'EMAIL (OPCIONAL)':'',
+      // Metadata interna (no va al sistema de importación pero ayuda en debug/localStorage)
       received_at:new Date().toLocaleString('es-CO',{timeZone:'America/Bogota',hour12:false}),
       created_at:new Date().toISOString(),
       url:window.location.href,
