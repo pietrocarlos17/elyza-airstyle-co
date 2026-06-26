@@ -2435,17 +2435,16 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
       localStorage.setItem(KEY,JSON.stringify(prev));
     }catch(e){console.warn('[ELYZA COD] localStorage backup failed',e)}
 
-    // Fire Purchase event in Meta + TikTok pixels — only after backend confirms the order
-    let purchaseFired=false;
-    const firePurchasePixels=()=>{
-      if(purchaseFired)return;
-      purchaseFired=true;
-      if(window.fbq)fbq('track','Purchase',{value:payload.total,currency:'COP',content_ids:['elyza-airstyle-co'],content_type:'product',num_items:qty});
-      if(window.ttq&&window.ttq.track)window.ttq.track('CompletePayment',{value:payload.total,currency:'COP',contents:[{content_id:'elyza-airstyle-co',quantity:qty,price:unitPrice}]});
-    };
-
     const endpoint=window.ELYZA_COD_ENDPOINT||'';
     const finalize=()=>{
+      // Purchase — dispara só quando a tela de confirmação aparece.
+      // Idempotente por orderId: chamadas extras (ex: catch após then) não duplicam.
+      if(codSubmit.__purchaseFiredFor!==orderId){
+        codSubmit.__purchaseFiredFor=orderId;
+        const value=unitPrice*qty;
+        if(window.fbq)fbq('track','Purchase',{value,currency:'COP',content_ids:['elyza-airstyle-co'],content_type:'product',num_items:qty});
+        if(window.ttq&&window.ttq.track)window.ttq.track('CompletePayment',{value,currency:'COP',contents:[{content_id:'elyza-airstyle-co',quantity:qty,price:unitPrice}]});
+      }
       setText('codOrderId',orderId);
       cart.classList.add('thanks');
       cart.scrollTop=0;
@@ -2463,11 +2462,10 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle CO',content_category:'Ha
         body,
         redirect:'follow',
       })
-        .then(res=>{if(res&&res.ok)firePurchasePixels();finalize();})
-        .catch(()=>finalize()); // still confirm — local backup already saved; pixel NOT fired on network failure
+        .then(()=>finalize())
+        .catch(()=>finalize()); // backup local já está salvo
     }else{
       console.log('[ELYZA COD] No endpoint configured. Order saved in localStorage. Payload:',payload);
-      firePurchasePixels();
       setTimeout(finalize,700);
     }
   });
